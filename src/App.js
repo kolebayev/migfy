@@ -1,14 +1,23 @@
-import React, { useState } from 'react';
-import './App.css';
-import Welcome from './Components/Welcome/Welcome'
+import React, { useState } from "react";
+import "./App.scss";
+import Welcome from "./Components/Welcome/Welcome";
+import Desk from "./Components/Desk/Desk";
 
 function App() {
   // const [isLoading, setIsLoading] = useState(false)
-  const [plData, setPlData] = useState([])
+  const [plData, setPlData] = useState([]);
+  // const [isLoading, setIsLoading] = useState(false)
 
   return (
     <div className="App">
-      <Welcome moveDataUpward={data => setPlData(data)}/>
+      {plData.length === 0 ? (
+        <Welcome
+          moveDataUpward={(data) => setPlData(data)}
+          // showLoading={()=>{}}
+        />
+      ) : (
+        <Desk plData={plData}/>
+      )}
     </div>
   );
 }
