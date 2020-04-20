@@ -13,10 +13,9 @@ function App() {
       {plData.length === 0 ? (
         <Welcome
           moveDataUpward={(data) => setPlData(data)}
-          // showLoading={()=>{}}
         />
       ) : (
-        <Desk plData={plData}/>
+        <Desk plData={plData} moveDataUpward={(data) => setPlData(data)}/>
       )}
     </div>
   );

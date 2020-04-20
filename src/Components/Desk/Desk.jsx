@@ -1,19 +1,16 @@
 import React, { useState } from "react";
 import "./Desk.scss";
 import "../PlayListItem/PlayListItem";
-// import PlayListItem from "../PlayListItem/PlayListItem";
-import { ListGroup, Button } from "react-bootstrap";
-import AlbumPlaceholder from '../Icons/AlbumPlaceholder'
-import RemoveFromProcessed from '../Icons/RemoveFromProcessed'
+import PlayListItem from "../PlayListItem/PlayListItem";
+import { ListGroup } from "react-bootstrap";
 
-function Desk({ plData }) {
-  const disabled = (willProcessed) => {
-    if (willProcessed === false) {
-      return { opacity: "0.3" };
-    } else {
-      return { opacity: "1" };
-    }
-  };
+function Desk({ plData, moveDataUpward }) {
+  const [data, setData] = useState(plData)
+  const setWillProcessed = (id, value) => {
+    setData(data.tracklist.forEach(el => {
+      el.id === id && (el.willProcessed = value)
+    }))
+  }
 
   return (
     <div className="desk">
@@ -27,40 +24,19 @@ function Desk({ plData }) {
         />
         <span>{plData.title.name}</span>
       </div>
+
       <ListGroup>
         {plData.tracklist.map((el, i) => {
           return (
-            <ListGroup.Item key={el.id}>
-              <div className="playlist-item">
-                <div
-                  style={disabled(el.willProcessed)}
-                  className="playlist-item"
-                >
-                  {el.artworkLink.length !== 0 ? (
-                    <img
-                      className="playlist-item_artwork"
-                      src={el.artworkLink}
-                      alt={"img" + el.id}
-                    ></img>
-                  ) : (
-                    <div className="playlist-item_artwork">
-                      
-                      <AlbumPlaceholder />
-                    </div>
-                  )}
-
-                  <div className="playlist-item_data-wrapper">
-                    <div className="playlist-item_name">{el.name}</div>
-                    <div className="playlist-item_artist">{el.artist}</div>
-                  </div>
-                </div>
-
-                <Button variant="light">
-                  
-                  <RemoveFromProcessed />
-                </Button>
-              </div>
-            </ListGroup.Item>
+            <PlayListItem
+              name={el.name}
+              key={el.id}
+              artist={el.artist}
+              artworkLink={el.artworkLink}
+              wasFound={el.wasFound}
+              willProcessed={el.willProcessed}
+              setWillProcessed={setWillProcessed}
+            />
           );
         })}
       </ListGroup>
