@@ -80,8 +80,22 @@ function Welcome({ moveDataUpward }) {
           <Spinner animation="border" variant="light" size="sm" />
         )}
       </Button>
+      {' '}
+      <Button
+        variant="primary"
+        onClick={() => sendPlLink(`
+            https://music.apple.com/ru/playlist/%D1%80%D0%BE%D1%86%D0%BA/pl.u-PDb4zlBFL19qGpg
+        `)}
+        style={{ width: "100px" }}
+      >
+        {!isLoading ? (
+          "CHILL"
+        ) : (
+          <Spinner animation="border" variant="light" size="sm" />
+        )}
+      </Button>
 
-      <div style={{ marginTop: "50px" }}>
+      <div style={{ marginLeft: "50px" }}>
         https://music.apple.com/ru/playlist/%D1%80%D0%BE%D1%86%D0%BA/pl.u-PDb4zlBFL19qGpg
       </div>
 
