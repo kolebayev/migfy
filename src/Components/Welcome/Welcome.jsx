@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import "./Welcome.scss";
 import {
   Button,
@@ -8,6 +8,7 @@ import {
   Card,
 } from "react-bootstrap";
 import ServerResponseToast from '../ServerResponseToast/ServerResponseToast'
+import { useStoreActions, useStoreState, action } from 'easy-peasy';
 
 function Welcome({ moveDataUpward }) {
   const [isValid, setInputValidity] = useState(true);
@@ -15,25 +16,34 @@ function Welcome({ moveDataUpward }) {
   const [isLoading, setIsLoading] = useState(false);
   const [serverError, setServerError] = useState("");
 
-  const sendPlLink = async (url) => {
-    setIsLoading(true);
-    let response = await fetch("/parseApplePlaylistLink", {
-      method: "POST",
-      headers: {
-        "Content-Type": "text/plain;charset=utf-8",
-      },
-      body: url,
-    });
-    if (response.ok) {
-      let json = await response.json();
-      console.log(json);
-      moveDataUpward(json);
-    } else {
-      setServerError(response.status);
-      console.log("Ошибка HTTP: " + response.status);
-      setIsLoading(false)
-    }
-  };
+  // const products = useStoreState(state => state.products.items);
+
+  // const useRes = () => useStoreActions(actions => actions.fetchPlURL)
+  const thunkCheck = useStoreActions(actions => actions.playlist.fetchPlURL)
+  const check = useCallback(
+    () => thunkCheck('https://music.apple.com/ru/playlist/chill/pl.u-Ymb0vqqIPW9v30L')
+  )
+
+  // const sendPlLink = async url => {
+  //   setIsLoading(true);
+  //   let response = await fetch("/parseApplePlaylistLink", {
+  //     method: "POST",
+  //     headers: {
+  //       "Content-Type": "text/plain;charset=utf-8",
+  //     },
+  //     body: url,
+  //   });
+  //   if (response.ok) {
+  //     let json = await response.json();
+  //     console.log(json);
+  //     // useRes(json)
+  //     moveDataUpward(json);
+  //   } else {
+  //     setServerError(response.status);
+  //     console.log("Ошибка HTTP: " + response.status);
+  //     setIsLoading(false)
+  //   }
+  // };
 
   const plLinkValidation = (inputURL) => {
     const url = encodeURI(inputURL);
@@ -43,7 +53,8 @@ function Welcome({ moveDataUpward }) {
       url.includes("/playlist/") &&
       url.includes("/pl")
     ) {
-      sendPlLink(url);
+      // sendPlLink(url);
+      // useRes(url)
     } else {
       setInputValidity(false);
     }
@@ -81,11 +92,11 @@ function Welcome({ moveDataUpward }) {
         )}
       </Button>
       {' '}
+
+    
       <Button
         variant="primary"
-        onClick={() => sendPlLink(`
-            https://music.apple.com/ru/playlist/%D1%80%D0%BE%D1%86%D0%BA/pl.u-PDb4zlBFL19qGpg
-        `)}
+        onClick={check}
         style={{ width: "100px" }}
       >
         {!isLoading ? (
@@ -95,11 +106,8 @@ function Welcome({ moveDataUpward }) {
         )}
       </Button>
 
-      <div style={{ marginLeft: "50px" }}>
-        https://music.apple.com/ru/playlist/%D1%80%D0%BE%D1%86%D0%BA/pl.u-PDb4zlBFL19qGpg
-      </div>
 
-      <div>
+      {/* <div>
         <p>try one of the following</p>
         <div style={{ display: "flex" }}>
           {[1, 2, 3].map((el, i) => {
@@ -118,7 +126,7 @@ function Welcome({ moveDataUpward }) {
             );
           })}
         </div>
-      </div>
+      </div> */}
 
       {serverError && (
         <ServerResponseToast serverError={serverError} close={(str) => setServerError(str)}/>
