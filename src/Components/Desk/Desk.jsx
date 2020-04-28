@@ -1,16 +1,12 @@
-import React, { useState } from "react";
+import React from "react";
 import "./Desk.scss";
 import "../PlayListItem/PlayListItem";
 import PlayListItem from "../PlayListItem/PlayListItem";
 import { ListGroup } from "react-bootstrap";
+import { useStoreState } from 'easy-peasy';
 
-function Desk({ plData, moveDataUpward }) {
-  const [data, setData] = useState(plData)
-  const setWillProcessed = (id, value) => {
-    setData(data.tracklist.forEach(el => {
-      el.id === id && (el.willProcessed = value)
-    }))
-  }
+function Desk() {
+  const plData = useStoreState(state => state.playlist.data)
 
   return (
     <div className="desk">
@@ -19,14 +15,14 @@ function Desk({ plData, moveDataUpward }) {
           width={64}
           height={64}
           className="mr-3"
-          src={plData.title.cover}
+          src={plData.cover}
           alt="placeholder"
         />
-        <span>{plData.title.name}</span>
+        <span>{plData.name}</span>
       </div>
 
       <ListGroup>
-        {plData.tracklist.map((el, i) => {
+        {plData.tracklist.map(el => {
           return (
             <PlayListItem
               name={el.name}
@@ -35,7 +31,6 @@ function Desk({ plData, moveDataUpward }) {
               artworkLink={el.artworkLink}
               wasFound={el.wasFound}
               willProcessed={el.willProcessed}
-              setWillProcessed={setWillProcessed}
             />
           );
         })}

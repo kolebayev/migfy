@@ -1,25 +1,14 @@
-import React, { useState } from "react";
+import React from "react";
 import "./App.scss";
 import Welcome from "./Components/Welcome/Welcome";
 import Desk from "./Components/Desk/Desk";
-import { useStoreActions, useStoreState, action } from 'easy-peasy';
+import { useStoreState } from "easy-peasy";
 
 function App() {
-  // const [isLoading, setIsLoading] = useState(false)
-  const [plData, setPlData] = useState([]);
-  // const [isLoading, setIsLoading] = useState(false)
-  // const useRes = useStoreActions(actions => actions.setPl,;)
+  const tracklist = useStoreState((state) => state.playlist.data.tracklist);
 
   return (
-    <div className="App">
-      {plData.length === 0 ? (
-        <Welcome
-          moveDataUpward={(data) => setPlData(data)}
-        />
-      ) : (
-        <Desk plData={plData} moveDataUpward={(data) => setPlData(data)}/>
-      )}
-    </div>
+    <div className="App">{tracklist.length === 0 ? <Welcome /> : <Desk />}</div>
   );
 }
 

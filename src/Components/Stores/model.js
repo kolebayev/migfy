@@ -8,48 +8,47 @@ export default {
       url: "",
       tracklist: [],
     },
-    
-    fetchPlURL: thunk(async (actions, payload) => {
-      console.log('action.fetchPlURL')
+    service: {
+      serverError: null,
+      isLoading: false,
+    },
+
+    setPl: action((state, data) => {
+      state.data = { ...data };
+    }),
+
+    fetchPlURL: thunk(async (actions, url) => {
+      console.log("action.fetchPlURL");
       let response = await fetch("/parseApplePlaylistLink", {
         method: "POST",
         headers: {
           "Content-Type": "text/plain;charset=utf-8",
         },
-        body: payload,
+        body: url,
       });
       if (response.ok) {
         let json = await response.json();
-        console.log(json);
-        actions.setPl(json)
+        actions.setPl(json);
       } else {
-        // setServerError(response.status);
         console.log("Ошибка HTTP: " + response.status);
-        // setIsLoading(false)
+        actions.setServerError(response.status);
       }
-
     }),
 
-    ok: thunk((actions, payload) => {
-      console.log('thunk.ok' , '///////' , payload)
-
+    setServerError: action((state, error) => {
+      state.service.serverError = error;
     }),
 
-    setPl: action((state, payload) => {
-      console.log('action.setPl')
-      console.log(state.data.name)
-      console.log(payload)
-      state.data.name += payload.title.name
-      state.data.cover += payload.title.cover
-      state.data.url += payload.title.tracklist
-      state.data.tracklist.push(...payload.tracklist)
+    removeServerError: action((state) => {
+      state.service.serverError = null;
     }),
 
-    // plLinkValidation: thunk(() => {}),
+    setIsLoading: action((state) => {
+      state.service.isLoading = true;
+    }),
+
+    removeIsLoading: action((state) => {
+      state.service.isLoading = false;
+    }),
   },
-
-  // thunks
-  // initialise: thunk(async (actions, payload, { dispatch }) => {
-  //   await dispatch.todos.fetchTodos();
-  // }),
 };

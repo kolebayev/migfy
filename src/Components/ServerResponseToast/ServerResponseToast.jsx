@@ -1,7 +1,7 @@
 import React from "react";
 import { Toast } from "react-bootstrap";
 
-function Welcome({ serverError, close }) {
+function Welcome({ doRemoveServerError, serverError }) {
   return (
     <Toast
       style={{
@@ -9,7 +9,7 @@ function Welcome({ serverError, close }) {
         bottom: 0,
         center: 0,
       }}
-      onClose={() => close('')}
+      onClose={doRemoveServerError}
       animation={true}
     >
       <Toast.Header>
