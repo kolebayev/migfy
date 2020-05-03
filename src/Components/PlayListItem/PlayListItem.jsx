@@ -1,31 +1,26 @@
-import React, { useState } from "react";
-import { ListGroup, Button } from "react-bootstrap";
-import "./PlayListItem.scss";
-import AlbumPlaceholder from "../Icons/AlbumPlaceholder";
-import RemoveFromProcessed from "../Icons/RemoveFromProcessed";
+import React, { useState, useCallback } from 'react';
+import { ListGroup, Button } from 'react-bootstrap';
+import './PlayListItem.scss';
+import AlbumPlaceholder from '../Icons/AlbumPlaceholder';
+import RemoveFromProcessed from '../Icons/RemoveFromProcessed';
+import AddToProcessed from '../Icons/AddToProcessed';
+import { useStoreActions } from 'easy-peasy';
 
-function PlayListItem({
-  name,
-  key,
-  artist,
-  artworkLink,
-  wasFound,
-  willProcessed,
-  setWillProcessed
-}) {
+function PlayListItem({ name, id, artist, artworkLink, wasFound, willProcessed }) {
   const [onHover, setHover] = useState(false);
+  const setWillProcessed = useStoreActions((actions) => actions.playlist.setWillProcessed);
+  const doSetWillProcessed = useCallback(() => setWillProcessed(id), [setWillProcessed, id]);
 
   const disabled = () => {
     if (willProcessed === false) {
-      return { opacity: "0.3" };
+      return { opacity: '0.5' };
     } else {
-      return { opacity: "1" };
+      return { opacity: '1' };
     }
   };
 
   return (
     <ListGroup.Item
-      key={key}
       onMouseOver={(e) => {
         e.stopPropagation();
         e.preventDefault();
@@ -40,11 +35,7 @@ function PlayListItem({
       <div className="playlist-item">
         <div style={disabled()} className="playlist-item">
           {artworkLink.length !== 0 ? (
-            <img
-              className="playlist-item_artwork"
-              src={artworkLink}
-              alt={"img" + key}
-            ></img>
+            <img className="playlist-item_artwork" src={artworkLink} alt={'img' + id}></img>
           ) : (
             <div className="playlist-item_artwork">
               <AlbumPlaceholder />
@@ -58,8 +49,8 @@ function PlayListItem({
         </div>
 
         {onHover && (
-          <Button variant="Light" onClick={()=>setWillProcessed(key, !willProcessed)}>
-            <RemoveFromProcessed />
+          <Button variant="Light" onClick={doSetWillProcessed}>
+            {!willProcessed ? <RemoveFromProcessed /> : <AddToProcessed />}
           </Button>
         )}
       </div>
