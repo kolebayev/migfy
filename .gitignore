@@ -1,5 +1,6 @@
 # dependencies
-/node_modules
+server/node_modules
+client/node_modules
 /.pnp
 .pnp.js
 
@@ -21,5 +22,5 @@ yarn-debug.log*
 yarn-error.log*
 
 .idea
-.client/src/Components/Stores/fakeData.js
-.server/spotify/creds.js
+client/src/Components/Stores/fakeData.js
+server/spotify/creds.js
