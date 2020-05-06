@@ -1,0 +1,29 @@
+{
+  "name": "migfy-server",
+  "version": "1.0.0",
+  "description": "Express app for parsing apple music playlists and add them to spotify",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kolebayev/migfy-server.git"
+  },
+  "author": "Ilya Kolebayev",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/kolebayev/migfy-server/issues"
+  },
+  "homepage": "https://github.com/kolebayev/migfy-server#readme",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1",
+    "jsdom": "^16.2.2"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.3",
+    "prettier": "^2.0.5"
+  }
+}
