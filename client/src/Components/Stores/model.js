@@ -61,5 +61,24 @@ export default {
       let processedItems = state.data.tracklist.filter((item) => item.willProcessed === true);
       state.service.willProcessedQty = processedItems.length;
     }),
+
+    // login: thunk(async () => {
+    //   console.log('LOGIN');
+    //   let response = await fetch(
+    //     '/login'
+    //     // , {
+    //     // method: 'GET',
+    //     // origin: 'http://localhost:3000',
+    //     // mode: 'no-cors',
+    //     // headers: {
+    //     //   'Content-Type': 'text/plain;charset=utf-8',
+    //     // },
+    //     // body: url,
+    //     // }
+    //   );
+    //   if (response.ok) {
+
+    //   }
+    // }),
   },
 };

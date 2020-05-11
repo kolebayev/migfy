@@ -1,11 +1,20 @@
 import React, { useCallback } from 'react';
 import { Button, Dropdown, ButtonGroup, DropdownButton } from 'react-bootstrap';
-import { useStoreState } from 'easy-peasy';
+import { useStoreState, useStoreActions } from 'easy-peasy';
 import './ProcessingPanel.scss';
 
 function ProcessingPanel() {
   const plData = useStoreState((state) => state.playlist.data);
   const willProcessedQty = useStoreState((state) => state.playlist.service.willProcessedQty);
+  const login = useCallback(async () => {
+    let response = await fetch('/login');
+    if (response.ok) {
+      let loginURI = await response.text();
+      window.location.assign(loginURI);
+    } else {
+      console.log('error');
+    }
+  }, []);
 
   const getProcessed = {
     json: function () {
@@ -64,7 +73,7 @@ function ProcessingPanel() {
             .tsv
           </Dropdown.Item>
         </DropdownButton>
-        <Button variant="primary" className="processing-panel_margin-button">
+        <Button onClick={login} variant="primary" className="processing-panel_margin-button">
           Go To Spotify
         </Button>
       </div>
