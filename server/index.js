@@ -15,3 +15,7 @@ console.log(`listening on ${port} \n`);
 
 app.use('/', parseAppleLink);
 app.use('/', cors(), login);
+app.get('/callback', (req, res) => {
+  // const url = req.body;
+  console.log('CALLBACK');
+});

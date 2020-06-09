@@ -10,7 +10,15 @@ function ProcessingPanel() {
     let response = await fetch('/login');
     if (response.ok) {
       let loginURI = await response.text();
+      console.log(loginURI);
       window.location.assign(loginURI);
+      // window.location.assign(window.location + 'callback');
+
+      // await fetch('/callback', {
+      //   method: 'POST',
+      //   headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      //   body: loginURI,
+      // });
     } else {
       console.log('error');
     }
