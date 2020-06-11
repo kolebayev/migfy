@@ -27,7 +27,7 @@ router.get('/callback', cors(), (req, res) => {
     json: true,
   };
 
-  req.post(authOptions, (error, response, body) => {
+  request.post(authOptions, (error, response, body) => {
     if (!error && response.statusCode === 200) {
       var access_token = body.access_token,
         refresh_token = body.refresh_token;
@@ -39,7 +39,7 @@ router.get('/callback', cors(), (req, res) => {
       };
 
       // use the access token to access the Spotify Web API
-      req.get(options, function (error, response, body) {
+      request.get(options, function (error, response, body) {
         console.log(body);
       });
 
