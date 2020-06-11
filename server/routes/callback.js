@@ -8,7 +8,10 @@ const spotify = require('../spotify/creds.js');
 
 router.get('/callback', cors(), (req, res) => {
     // этот консоль лог нихуя не работает
-    console.log('callback route works')
+    const code = req.query.code || null
+    console.log('code: ', code)
+    res.redirect('http://localhost:3000')
+    // console.log('callback route works')
 });
 
 module.exports = router;
