@@ -10,7 +10,6 @@ function ProcessingPanel() {
     let response = await fetch('/login');
     if (response.ok) {
       let loginURI = await response.text();
-      console.log(loginURI);
       window.location.assign(loginURI);
     } else {
       console.log('error');

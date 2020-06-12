@@ -14,7 +14,6 @@ router.get('/login', cors(), (req, res) => {
         client_id: spotify.creds.clientId,
         scopes: scopes,
         redirect_uri: spotify.creds.redirectUri,
-        // state: '123',
       })
   );
 });

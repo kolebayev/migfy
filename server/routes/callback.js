@@ -4,79 +4,54 @@ const router = express.Router();
 const cors = require('cors');
 const spotify = require('../spotify/creds.js');
 const https = require('https');
-// const axios = require('axios');
 
-console.log('callback route works');
+// const axios = require('axios');
 
 router.get('/callback', cors(), (req, res) => {
   const code = req.query.code || null;
-  console.log('code: ', code);
+  console.log('code: ', code, '\n');
   res.redirect('http://localhost:3000/');
 
-  var authHeader =
-    'Basic ' +
-    Buffer.from(spotify.creds.clientId + ':' + spotify.creds.clientSecret).toString('base64');
-
-  const authOptions = {
+  const options = {
+    method: 'POST',
     hostname: 'accounts.spotify.com',
     path: '/api/token',
-    method: 'POST',
-    port: '443',
-    grant_type: 'authorization_code',
-    code: code,
-    redirect_uri: spotify.creds.redirectUri,
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
-      Authorization: authHeader,
     },
   };
 
-  const request = https
-    .request(authOptions, (res) => {
-      console.log('https request to get token ' + res.statusCode);
-      if (res.statusCode === 200) {
-        console.log('res200');
-      }
-    })
-    .on('error', (err) => {
-      console.log('Error: ', err.message);
+  const request = https.request(options, (res) => {
+    const chunks = [];
+
+    res.on('data', function (chunk) {
+      chunks.push(chunk);
     });
 
+    res.on('end', function (chunk) {
+      const body = Buffer.concat(chunks);
+      console.log(JSON.parse(body));
+      const accessToken = JSON.parse(body).access_token;
+      const refreshToken = JSON.parse(body).refresh_token;
+      // понавтыкать сюда ручек, которые использвуют токен ?
+    });
+
+    res.on('error', function (error) {
+      console.error(error);
+    });
+  });
+
+  const postData = querystring.stringify({
+    grant_type: 'authorization_code',
+    code,
+    redirect_uri: spotify.creds.redirectUri,
+    client_id: spotify.creds.clientId,
+    client_secret: spotify.creds.clientSecret,
+  });
+
+  request.write(postData);
+
   request.end();
-
-  //   request.post(authOptions, (error, response, body) => {
-  //     if (!error && response.statusCode === 200) {
-  //       var access_token = body.access_token,
-  //         refresh_token = body.refresh_token;
-
-  //       var options = {
-  //         url: 'https://api.spotify.com/v1/me',
-  //         headers: { Authorization: 'Bearer ' + access_token },
-  //         json: true,
-  //       };
-
-  //       // use the access token to access the Spotify Web API
-  //       request.get(options, function (error, response, body) {
-  //         console.log(body);
-  //       });
-
-  //       // we can also pass the token to the browser to make requests from there
-  //       //   res.redirect(
-  //       //     '/#' +
-  //       //       querystring.stringify({
-  //       //         access_token: access_token,
-  //       //         refresh_token: refresh_token,
-  //       //       })
-  //       //   );
-  //     } else {
-  //       res.redirect(
-  //         '/#' +
-  //           querystring.stringify({
-  //             error: 'invalid_token',
-  //           })
-  //       );
-  //     }
-  //   });
 });
 
 module.exports = router;
