@@ -3,45 +3,30 @@ const querystring = require('querystring');
 const router = express.Router();
 const cors = require('cors');
 const spotify = require('../spotify/creds.js');
-const https = require('https');
-
-// const axios = require('axios');
+const axios = require('axios');
 
 router.get('/callback', cors(), (req, res) => {
   const code = req.query.code || null;
   console.log('code: ', code, '\n');
   res.redirect('http://localhost:3000/');
 
-  const options = {
-    method: 'POST',
-    hostname: 'accounts.spotify.com',
-    path: '/api/token',
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
-    },
+  // ручка апи спотифая
+  const getAccountData = async (token) => {
+    let response = await axios({
+      method: 'get',
+      url: 'https://api.spotify.com/v1/me',
+      headers: {
+        Authorization: 'Bearer ' + token,
+      },
+    });
+    if (response.status === 200) {
+      let res = await response.data;
+      console.log('final ' + JSON.stringify(res));
+    }
   };
 
-  const request = https.request(options, (res) => {
-    const chunks = [];
-
-    res.on('data', function (chunk) {
-      chunks.push(chunk);
-    });
-
-    res.on('end', function (chunk) {
-      const body = Buffer.concat(chunks);
-      console.log(JSON.parse(body));
-      const accessToken = JSON.parse(body).access_token;
-      const refreshToken = JSON.parse(body).refresh_token;
-      // понавтыкать сюда ручек, которые использвуют токен ?
-    });
-
-    res.on('error', function (error) {
-      console.error(error);
-    });
-  });
-
-  const postData = querystring.stringify({
+  // данные запроса
+  const data = querystring.stringify({
     grant_type: 'authorization_code',
     code,
     redirect_uri: spotify.creds.redirectUri,
@@ -49,9 +34,24 @@ router.get('/callback', cors(), (req, res) => {
     client_secret: spotify.creds.clientSecret,
   });
 
-  request.write(postData);
+  // получение токена
+  const getToken = async (callback) => {
+    let response = await axios({
+      method: 'post',
+      url: 'https://accounts.spotify.com/api/token',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      data,
+    });
+    if (response.status === 200) {
+      let data = await response.data;
+      callback(data.access_token);
+    } else {
+      console.log('error ', response.status);
+    }
+  };
+  
+  getToken(getAccountData);
 
-  request.end();
 });
 
 module.exports = router;
