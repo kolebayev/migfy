@@ -4,11 +4,11 @@ import data from './fakeData';
 export default {
   playlist: {
     data: {
-      // name: '',
-      // cover: '',
-      // url: '',
-      // tracklist: [],
-      ...data,
+      name: '',
+      cover: '',
+      url: '',
+      tracklist: [],
+      // ...data,
     },
     service: {
       serverError: null,

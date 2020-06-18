@@ -4,6 +4,7 @@ const router = express.Router();
 const cors = require('cors');
 const spotify = require('../spotify/creds.js');
 const axios = require('axios');
+const storage = require('../services/storage');
 
 router.get('/callback', cors(), (req, res) => {
   const code = req.query.code || null;
@@ -11,19 +12,19 @@ router.get('/callback', cors(), (req, res) => {
   res.redirect('http://localhost:3000/');
 
   // ручка апи спотифая
-  const getAccountData = async (token) => {
-    let response = await axios({
-      method: 'get',
-      url: 'https://api.spotify.com/v1/me',
-      headers: {
-        Authorization: 'Bearer ' + token,
-      },
-    });
-    if (response.status === 200) {
-      let res = await response.data;
-      console.log('final ' + JSON.stringify(res));
-    }
-  };
+  // const getAccountData = async (token) => {
+  //   let response = await axios({
+  //     method: 'get',
+  //     url: 'https://api.spotify.com/v1/me',
+  //     headers: {
+  //       Authorization: 'Bearer ' + token,
+  //     },
+  //   });
+  //   if (response.status === 200) {
+  //     let res = await response.data;
+  //     console.log('final ' + JSON.stringify(res));
+  //   }
+  // };
 
   // данные запроса
   const data = querystring.stringify({
@@ -35,7 +36,7 @@ router.get('/callback', cors(), (req, res) => {
   });
 
   // получение токена
-  const getToken = async (callback) => {
+  (async () => {
     let response = await axios({
       method: 'post',
       url: 'https://accounts.spotify.com/api/token',
@@ -44,14 +45,20 @@ router.get('/callback', cors(), (req, res) => {
     });
     if (response.status === 200) {
       let data = await response.data;
-      callback(data.access_token);
+      console.log(data.access_token);
+      console.log(data);
+      for (const prop in data) {
+        // console.log(`${property}: ${object[property]}`);
+        storage.set(prop, data[prop]);
+      }
+      // storage.set(...data);
+      // callback(data.access_token);
     } else {
       console.log('error ', response.status);
     }
-  };
-  
-  getToken(getAccountData);
+  })();
 
+  // getToken(getAccountData);
 });
 
 module.exports = router;

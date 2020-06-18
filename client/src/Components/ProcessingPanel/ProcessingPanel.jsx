@@ -76,6 +76,24 @@ function ProcessingPanel() {
         <Button onClick={login} variant="primary" className="processing-panel_margin-button">
           Go To Spotify
         </Button>
+        {/* <Button
+          onClick={() => {
+            fetch('/getMe');
+          }}
+          variant="primary"
+          className="processing-panel_margin-button"
+        >
+          get me
+        </Button>
+        <Button
+          onClick={() => {
+            fetch('/getPl');
+          }}
+          variant="primary"
+          className="processing-panel_margin-button"
+        >
+          get pl
+        </Button> */}
       </div>
     </div>
   );
