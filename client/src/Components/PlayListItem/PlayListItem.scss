@@ -4,7 +4,6 @@
   align-items: center;
   justify-content: space-between;
   &_artwork {
-    // background-color: #ccc;
     width: 35px;
     height: 35px;
     border-radius: 2px;
@@ -13,8 +12,10 @@
     margin-left: 15px;
   }
   &_name {
+    color: #20292f;
   }
   &_artist {
+    color: #827d7d;
     font-weight: 500;
     font-size: 0.9rem;
   }

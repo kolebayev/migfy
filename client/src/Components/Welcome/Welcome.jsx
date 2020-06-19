@@ -1,12 +1,14 @@
 import React, { useState, useCallback } from 'react';
 import './Welcome.scss';
-import { Button, Spinner, InputGroup, FormControl } from 'react-bootstrap';
+import { Button, Spinner, FormControl } from 'react-bootstrap';
 import ServerResponseToast from '../ServerResponseToast/ServerResponseToast';
 import { useStoreActions, useStoreState } from 'easy-peasy';
+import ArrowRight from '../Icons/ArrowRight';
 
 function Welcome() {
   const [isValid, setInputValidity] = useState(true);
   const [plURL, setPlURL] = useState('');
+  const [inputFocus, setInputFocus] = useState(false);
 
   const fetchPlURL = useStoreActions((actions) => actions.playlist.fetchPlURL);
   const doFetchPlURL = useCallback(() => fetchPlURL(plURL), [fetchPlURL, plURL]);
@@ -30,15 +32,18 @@ function Welcome() {
   };
 
   return (
-    <div style={{ marginTop: '50px' }}>
-      <InputGroup className="mb-3">
+    <div className="welcome">
+      <div className="welcome_content">
+        <ArrowRight fill={inputFocus ? 'rgb(0, 105, 217)' : 'grey'} />
         <FormControl
+          className="welcome_input"
           placeholder="Paste Apple Music public playlist URL"
           aria-label="Playlist URL"
           aria-describedby="basic-addon1"
+          onFocus={() => setInputFocus(true)}
+          onBlur={() => setInputFocus(false)}
           style={{
-            borderColor: !isValid && 'var(--danger)',
-            boxShadow: !isValid && '0 0 0 .2rem rgba(220, 53, 69,.25)',
+            backgroundColor: !isValid && 'rgba(255, 0, 0, .1)',
           }}
           onKeyDown={(e) => {
             if (e.key === 'Enter') {
@@ -47,13 +52,19 @@ function Welcome() {
           }}
           onChange={(e) => setPlURL(e.target.value)}
         />
-      </InputGroup>
 
-      <Button variant="primary" onClick={() => plLinkValidation(plURL)} style={{ width: '100px' }}>
-        {!isLoading ? 'Parse link' : <Spinner animation="border" variant="light" size="sm" />}
-      </Button>
+        <Button
+          variant="primary"
+          onClick={() => plLinkValidation(plURL)}
+          style={{ width: '100px' }}
+        >
+          {!isLoading ? 'Parse link' : <Spinner animation="border" variant="light" size="sm" />}
+        </Button>
 
-      {serverError && <ServerResponseToast serverError={serverError} close={doRemoveServerError} />}
+        {serverError && (
+          <ServerResponseToast serverError={serverError} close={doRemoveServerError} />
+        )}
+      </div>
     </div>
   );
 }

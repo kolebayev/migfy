@@ -5,6 +5,7 @@ import PlayListItem from '../PlayListItem/PlayListItem';
 import { ListGroup } from 'react-bootstrap';
 import { useStoreState } from 'easy-peasy';
 import ProcessingPanel from '../ProcessingPanel/ProcessingPanel';
+import PlaylistPlaceholder from '../Icons/PlaylistPlaceholder';
 
 function Desk() {
   const plData = useStoreState((state) => state.playlist.data);
@@ -12,12 +13,16 @@ function Desk() {
   return (
     <Fragment>
       <div className="desk">
-        <div>
-          <img width={100} height={100} className="mr-3" src={plData.cover} alt="placeholder" />
-          <span>{plData.name}</span>
+        <div className="desk_header">
+          {plData.cover ? (
+            <img width={100} height={100} className="mr-3" src={plData.cover} alt="placeholder" />
+          ) : (
+            <PlaylistPlaceholder />
+          )}
+          <span className="desk_header_pl-name">{plData.name}</span>
         </div>
 
-        <ListGroup>
+        <ListGroup className="desk_list">
           {plData.tracklist.map((el) => {
             return (
               <PlayListItem
@@ -33,6 +38,7 @@ function Desk() {
           })}
         </ListGroup>
       </div>
+
       <ProcessingPanel />
     </Fragment>
   );

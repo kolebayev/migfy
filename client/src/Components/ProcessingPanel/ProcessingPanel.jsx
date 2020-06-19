@@ -50,11 +50,14 @@ function ProcessingPanel() {
   return (
     <div className="processing-panel">
       <div className="processing-panel_content">
-        <div>items to add {willProcessedQty}</div>
+        <div>
+          <div className="processing-panel_content_label">Tracks to add</div>
+          <div className="processing-panel_content_quantity">{willProcessedQty}</div>
+        </div>
         <DropdownButton
           as={ButtonGroup}
           drop="up"
-          variant="secondary"
+          variant="outline-primary"
           title="Export as "
           className="processing-panel_margin-button"
         >

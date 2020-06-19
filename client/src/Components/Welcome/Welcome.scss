@@ -1,0 +1,22 @@
+.welcome {
+  width: 600px;
+  height: 100vh;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  &_content {
+    display: inherit;
+    flex-direction: row;
+  }
+  &_input {
+    border: none;
+    width: calc(100% - 120px);
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    margin-right: 8px;
+    &:focus {
+      border-color: none;
+      box-shadow: none;
+    }
+  }
+}
