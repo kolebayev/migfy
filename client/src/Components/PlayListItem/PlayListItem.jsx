@@ -10,14 +10,7 @@ function PlayListItem({ name, id, artist, artworkLink, wasFound, willProcessed }
   const [onHover, setHover] = useState(false);
   const setWillProcessed = useStoreActions((actions) => actions.playlist.setWillProcessed);
   const doSetWillProcessed = useCallback(() => setWillProcessed(id), [setWillProcessed, id]);
-
-  const disabled = () => {
-    if (willProcessed === false) {
-      return { opacity: '0.5' };
-    } else {
-      return { opacity: '1' };
-    }
-  };
+  let isDisabled = willProcessed ? { opacity: '1' } : { opacity: '.3' };
 
   return (
     <ListGroup.Item
@@ -33,7 +26,7 @@ function PlayListItem({ name, id, artist, artworkLink, wasFound, willProcessed }
       }}
     >
       <div className="playlist-item">
-        <div style={disabled()} className="playlist-item">
+        <div style={isDisabled} className="playlist-item">
           {artworkLink.length !== 0 ? (
             <img className="playlist-item_artwork" src={artworkLink} alt={'img' + id}></img>
           ) : (
@@ -47,12 +40,9 @@ function PlayListItem({ name, id, artist, artworkLink, wasFound, willProcessed }
             <div className="playlist-item_artist">{artist}</div>
           </div>
         </div>
-
-        {onHover && (
-          <Button variant="Light" onClick={doSetWillProcessed}>
-            {!willProcessed ? <RemoveFromProcessed /> : <AddToProcessed />}
-          </Button>
-        )}
+        <Button variant="Light" onClick={doSetWillProcessed}>
+          {!willProcessed ? <RemoveFromProcessed /> : onHover && <AddToProcessed />}
+        </Button>
       </div>
     </ListGroup.Item>
   );

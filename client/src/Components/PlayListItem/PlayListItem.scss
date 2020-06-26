@@ -19,11 +19,16 @@
     font-weight: 500;
     font-size: 0.9rem;
   }
+  button {
+    &:focus {
+      outline: 0;
+      box-shadow: none !important;
+    }
+  }
 }
 
 .list-group-item {
   &:hover {
-    // z-index: 1;
     color: #495057;
     text-decoration: none;
     background-color: #f8f9fa;
