@@ -12,7 +12,7 @@ router.get('/login', cors(), (req, res) => {
       querystring.stringify({
         response_type: 'code',
         client_id: spotify.creds.clientId,
-        scopes: scopes,
+        scopes,
         redirect_uri: spotify.creds.redirectUri,
       })
   );
