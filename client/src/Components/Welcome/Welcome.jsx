@@ -51,6 +51,7 @@ function Welcome() {
             }
           }}
           onChange={(e) => setPlURL(e.target.value)}
+          autoFocus="true"
         />
 
         <Button

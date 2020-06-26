@@ -1,20 +1,15 @@
 import React, { useCallback } from 'react';
 import { Button, Dropdown, ButtonGroup, DropdownButton } from 'react-bootstrap';
-import { useStoreState, useStoreActions } from 'easy-peasy';
+import { useStoreState, useStoreActions, action } from 'easy-peasy';
 import './ProcessingPanel.scss';
 
 function ProcessingPanel() {
   const plData = useStoreState((state) => state.playlist.data);
   const willProcessedQty = useStoreState((state) => state.playlist.service.willProcessedQty);
-  const login = useCallback(async () => {
-    let response = await fetch('/login');
-    if (response.ok) {
-      let loginURI = await response.text();
-      window.location.assign(loginURI);
-    } else {
-      console.log('error');
-    }
-  }, []);
+  const login = useStoreActions((actions) => actions.playlist.login);
+  const doLogin = useCallback(() => login(), [login]);
+  // const userData = useStoreState((state) => state.playlist.service.userData);
+  // const getUser = useStoreActions((actions) => actions.playlist.getUser);
 
   const getProcessed = {
     json: function () {
@@ -43,15 +38,18 @@ function ProcessingPanel() {
     return url;
   }, [getProcessed]);
 
-  const getTSVURL = useCallback(() => {
-    return 'data:text/tsv;charset=utf-8,' + encodeURI(getProcessed.csv());
-  }, [getProcessed]);
+  const getTSVURL = useCallback(
+    () => 'data:text/tsv;charset=utf-8,' + encodeURI(getProcessed.csv()),
+    [getProcessed]
+  );
+
+  // getUser();
 
   return (
     <div className="processing-panel">
       <div className="processing-panel_content">
         <div>
-          <div className="processing-panel_content_label">Tracks to add</div>
+          <div className="processing-panel_content_label">Tracks to export</div>
           <div className="processing-panel_content_quantity">{willProcessedQty}</div>
         </div>
         <DropdownButton
@@ -76,27 +74,13 @@ function ProcessingPanel() {
             .tsv
           </Dropdown.Item>
         </DropdownButton>
-        <Button onClick={login} variant="primary" className="processing-panel_margin-button">
+        {/* {userData && (
+          <img width={38} height={38} className="mr-3" src={userData.images[0].url} alt="userpic" />
+        )} */}
+
+        <Button onClick={doLogin} variant="primary" className="processing-panel_margin-button">
           Go To Spotify
         </Button>
-        {/* <Button
-          onClick={() => {
-            fetch('/getMe');
-          }}
-          variant="primary"
-          className="processing-panel_margin-button"
-        >
-          get me
-        </Button>
-        <Button
-          onClick={() => {
-            fetch('/getPl');
-          }}
-          variant="primary"
-          className="processing-panel_margin-button"
-        >
-          get pl
-        </Button> */}
       </div>
     </div>
   );
